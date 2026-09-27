@@ -1,262 +1,118 @@
 <p align="center">
-  <img src="assets/scribd.svg" alt="Scribd" width="200">
+  <img src="extension/icons/icon.svg" alt="Scribd Downloader logo" width="120">
 </p>
 
 <h1 align="center">Scribd Downloader</h1>
 
 <p align="center">
-  <b>Download Scribd documents as PDF for free - Fast, automated, and runs in background!</b>
+  <b>A browser extension that saves Scribd documents as clean PDFs, right from the toolbar.</b>
 </p>
 
 <p align="center">
-  <a href="https://www.python.org/downloads/">
-    <img src="https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+">
-  </a>
-  <a href="https://pypi.org/project/selenium/">
-    <img src="https://img.shields.io/badge/Selenium-4.0+-green?style=for-the-badge&logo=selenium&logoColor=white" alt="Selenium 4.0+">
-  </a>
-  <a href="LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-orange?style=for-the-badge" alt="MIT License">
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://buymeacoffee.com/mrsami">
-    <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me A Coffee">
-  </a>
-  <a href="https://github.com/sponsors/fullstackusama">
-    <img src="https://img.shields.io/badge/Sponsor-ea4aaa?style=for-the-badge&logo=github-sponsors&logoColor=white" alt="GitHub Sponsors">
-  </a>
-  <a href="https://github.com/fullstackusama/scribd-downloader/stargazers">
-    <img src="https://img.shields.io/github/stars/fullstackusama/scribd-downloader?style=for-the-badge&logo=github" alt="GitHub Stars">
-  </a>
+  <img src="https://img.shields.io/badge/Chrome-supported-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Chrome">
+  <img src="https://img.shields.io/badge/Edge-supported-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white" alt="Edge">
+  <img src="https://img.shields.io/badge/Brave-supported-FB542B?style=for-the-badge&logo=brave&logoColor=white" alt="Brave">
+  <img src="https://img.shields.io/badge/Manifest-V3-555?style=for-the-badge" alt="Manifest V3">
 </p>
 
 ---
 
 ## Features
 
-- **One-click download** - Just paste the Scribd URL and get your PDF
-- **Supports both Scribd URL styles** - Works with `/document/...` and legacy `/doc/...` links
-- **Runs in background** - Headless Chrome, no browser window pops up
-- **No scrolling required** - Loads Scribd page data directly instead of simulating page-by-page scrolling
-- **Clean PDFs** - No cookie banners, toolbars, or watermarks
-- **Bounded-memory export** - Keeps only a configurable batch of fully loaded pages in Chrome at once
-- **Disk-spooled merge** - Writes each rendered page to temporary storage before combining the final PDF with `pypdf`
-- **Large document support** - Verified with image-heavy documents containing up to 2,552 pages
-- **Better math rendering** - Preserves Scribd layout classes needed by equations and SVG content
-- **Exact pagination** - Validates that every Scribd page produces exactly one PDF sheet
-- **Dynamic page size** - Detects each rendered page's dimensions instead of forcing one fixed sheet size
-- **Auto filename** - PDF named after the document URL automatically
-- **No login required** - Works without Scribd account
-
----
-
-## Requirements
-
-- Python 3.10 or higher
-- Google Chrome browser installed
-- Chrome WebDriver (auto-managed by Selenium)
+- **Works from the toolbar**: open a Scribd document and click the extension icon; the URL is filled in for you
+- **Flexible input**: accepts links on any Scribd subdomain (`www.`, `it.`, `de.`, ...), both `/document/` and legacy `/doc/` URLs, or just the numeric document ID
+- **Download queue**: add as many documents as you like; they are exported one after another
+- **Live progress**: progress bar, status, and a full export log inside the popup. Close and reopen it at any time and the export keeps running
+- **Stays out of the way**: the document renders in a minimized window that closes automatically
+- **Clean PDFs**: no toolbars, cookie banners, or overlays
+- **Faithful output**: one PDF page per Scribd page, at the page's real size, with selectable text
+- **Bounded memory**: pages are loaded and released in small batches, so long documents don't exhaust memory
+- **Nothing else to install**: no Python, Selenium, or ChromeDriver
+- **No Scribd account required**
 
 ---
 
 ## Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/fullstackusama/scribd-downloader.git
-   cd scribd-downloader
-   ```
+The extension is not on the Chrome Web Store, so it is installed as an unpacked extension:
 
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+1. Download `scribd-downloader-extension-vX.Y.Z.zip` from the [latest release](https://github.com/Shargus/scribd-downloader-extension/releases/latest)
+2. Extract the zip into a folder you'll keep (the browser loads the extension from it, so don't delete it afterwards)
+3. Open the extensions page:
+   - Chrome: `chrome://extensions`
+   - Edge: `edge://extensions`
+   - Brave: `brave://extensions`
+4. Enable **Developer mode**
+5. Click **Load unpacked** and select the extracted folder (the one containing `manifest.json`)
+
+Requires Chrome 118 or later, or a browser based on it. Firefox and Safari are not supported.
+
+To update, download the new release, extract it over the same folder, and click the reload icon on the extension's card.
 
 ---
 
 ## Usage
 
-1. **Run the script**
-   ```bash
-   python scribd-downloader.py
-   ```
+1. Open a Scribd document and click the extension icon. The document's URL is filled in automatically. You can also paste any Scribd URL or type a document ID
+2. Optionally tick **Ask where to save**. Otherwise the PDF goes straight to your downloads folder, named after the document
+3. Click **Download PDF**
+4. Follow the progress in the popup. To download more documents, keep adding them; each one joins the queue and starts when the previous one finishes. Click ✕ to remove a document from the queue, or **Cancel** to stop the current export
 
-2. **Paste the Scribd document URL** when prompted:
-   ```
-   Input link Scribd: https://www.scribd.com/document/123456789/Document-Title
-   ```
-
-   Legacy Scribd URLs also work:
-   ```
-   Input link Scribd: https://www.scribd.com/doc/123456789/Document-Title
-   ```
-
-3. **Wait for the download** - The script will:
-   - Open the document in headless Chrome
-   - Load document pages directly in bounded batches
-   - Release each batch from Chrome after printing to control memory use
-   - Remove unwanted elements (toolbars, cookie banners)
-   - Spool individual pages to temporary storage and merge the final PDF
-   - Save the PDF in the current directory
-
-4. **Done!** Your PDF will be saved with the document name from the URL.
+While an export is running, the browser shows a *"Scribd Downloader started debugging this browser"* bar. This is expected, see [How it works](#how-it-works). Clicking **Cancel** on that bar also stops the export.
 
 ---
 
-## Example Output
+## How it works
 
-```text
-$ python scribd-downloader.py
-Input link Scribd: https://www.scribd.com/document/903361807/WorkdaySimpleIntegrations-EIB-31v2
+1. **Hidden rendering**: the Scribd embed page is opened in a minimized window, and the extension attaches to it through the Chrome DevTools Protocol (`chrome.debugger`)
+2. **Cleanup**: toolbars, cookie banners, and overlays are removed, while Scribd's layout classes are kept so equations and SVG content render correctly
+3. **Batched loading**: pages are loaded eight at a time through Scribd's own page manager, and the extension waits until their images and fonts are ready
+4. **Per-page printing**: each page is isolated and printed with `Page.printToPDF` at its exact size
+5. **Merging**: the single-page PDFs are combined with [pdf-lib](https://pdf-lib.js.org/) and handed to the browser's download manager
+6. **Memory release**: each finished batch is removed from the page before the next one loads
 
-Link embed: https://www.scribd.com/embeds/903361807/content
-Output filename: WorkdaySimpleIntegrations-EIB-31v2.pdf
+Chrome doesn't draw anything in a minimized window. Scribd waits for the browser to draw a frame before it loads its fonts, so without help the text would never appear. The extension supplies a replacement for that signal while the window is hidden, so the text renders.
 
-Starting Chrome browser...
-Cookie dialogs hidden.
-Top toolbar removed.
-Bottom toolbar removed.
-Adjusted 1 scroll containers for print.
-Print CSS injected.
+### Permissions
 
-Saving PDF as: WorkdaySimpleIntegrations-EIB-31v2.pdf
-  Export mode: Individual document pages
-  Margins: None
-  Headers/Footers: Disabled
-  ChromeDriver command timeout: 600s
-Exporting 316 document pages in bounded batches of 8...
-  Loading page batch 1-8/316...
-  Page 1/316 1002x1296px -> 10.438"x13.500"
-    OK: exactly 1 PDF sheet
-  ...
-Merging 316 disk-spooled PDF pages...
-PDF saved successfully to: C:\Users\...\WorkdaySimpleIntegrations-EIB-31v2.pdf
-Browser closed.
-```
+| Permission | Why it is needed |
+| ---------- | ---------------- |
+| `debugger` | Print pages to PDF and run the export steps inside the Scribd page |
+| `downloads` | Save the finished PDF |
+| `activeTab` | Read the current tab's URL to prefill the popup |
+| `storage` | Remember the "Ask where to save" choice, the queue, and the export progress |
+| `offscreen` | Hand the finished PDF to the download manager (background scripts can't do this directly) |
 
----
-
-## PDF Settings
-
-| Setting | Value |
-|---------|-------|
-| Page Size | Detected dynamically from Scribd's rendered page |
-| Margins | None (0) |
-| Headers/Footers | Disabled |
-| Background Graphics | Enabled |
-
----
-
-## How It Works
-
-1. **URL Conversion** - Converts Scribd document URL to embeddable format
-2. **Headless Browser** - Opens Chrome in background (invisible)
-3. **Batched Page Loading** - Loads a small group of Scribd pages and their images directly without scrolling
-4. **Cleanup** - Removes toolbars, cookie banners, and overlays while preserving Scribd layout classes
-5. **Per-page Export** - Detects each page's rendered size and prints exactly one PDF sheet through Chrome DevTools Protocol
-6. **Memory Release** - Removes the completed batch from Chrome and requests garbage collection
-7. **Disk-spooled Merge** - Combines the temporary one-page PDFs into the final document with `pypdf`
-8. **Auto Close** - Browser closes automatically after saving
-
----
-
-## Benchmarks
-
-Reference results from one Windows machine are shown below. Performance varies with network speed, document complexity, CPU, RAM, Chrome version, and storage speed.
-
-| Document | Pages | Total Time | Output Size | Blank Pages | Peak Combined RAM |
-|----------|------:|-----------:|------------:|------------:|------------------:|
-| CSS Solved Past Papers | 359 | 58.36 seconds | 228.49 MB | 0 | 1.47 GB |
-| Manual de Servicio MX-305 | 2,552 | 14 minutes 12 seconds | 237.28 MB | 0 | 2.46 GB |
-
-The batch size was `8` in both tests. Long documents still take time because Chrome must print every page individually, but fully loaded browser content is kept to one batch at a time.
+The extension sends no data anywhere. It only talks to Scribd to load the document you asked for.
 
 ---
 
 ## Troubleshooting
 
-### "ChromeDriver not found" error
-The script uses Selenium Manager to auto-download ChromeDriver. If you face issues:
-```bash
-pip install --upgrade selenium
-```
+**"Timed out waiting for the Scribd document to load"**: the document ID doesn't exist, the document isn't publicly viewable, or the network is too slow. Check that the document opens normally in the browser.
 
-### PDF not saving
-- Ensure you have write permissions in the current directory
-- Check if the Scribd URL is valid and accessible
-- For very large documents, increase `SCRIBD_CDP_TIMEOUT` (default: `600`)
+**"Warning: page N has text blocks whose fonts did not load"**: the page was saved after waiting 30 seconds for its fonts, and some of its text may be missing. Retrying on a faster connection usually helps.
 
-### Blank pages in PDF
-- Some documents may have DRM protection
-- Try increasing `SCRIBD_PAGE_LOAD_TIMEOUT` if page images load slowly
-- If a document still renders incorrectly, try visible mode with `SCRIBD_HEADLESS=0`
+**"Export interrupted"**: the browser stopped the extension's background process in the middle of an export, for example because the browser was closed. Start the download again; the rest of the queue continues on its own.
 
-### Very large documents
-- Ensure the drive containing your temporary directory has enough free space for individual page PDFs
-- Reduce `SCRIBD_EXPORT_BATCH_SIZE` if Chrome uses too much memory
-- Increase `SCRIBD_PAGE_LOAD_TIMEOUT` when slow image assets time out
-- Long documents still take time because each page is printed and validated separately
-
-### Large, image-heavy, or math-heavy documents
-You can tune the export with environment variables:
-
-```powershell
-$env:SCRIBD_CDP_TIMEOUT="900"
-$env:SCRIBD_PAGE_LOAD_TIMEOUT="180"
-$env:SCRIBD_EXPORT_BATCH_SIZE="4"
-python scribd-downloader.py
-```
-
-Useful variables:
-
-- `SCRIBD_CDP_TIMEOUT` - ChromeDriver command timeout in seconds for `Page.printToPDF`
-- `SCRIBD_PAGE_LOAD_TIMEOUT` - Maximum direct page-loading time in seconds (default: `120`)
-- `SCRIBD_EXPORT_BATCH_SIZE` - Maximum fully loaded pages kept in Chrome at once (default: `8`)
-- `SCRIBD_HEADLESS=0` - Run with a visible browser when debugging rendering issues locally
+**Blank pages**: some documents are protected or only partly available without a subscription; those pages can't be exported.
 
 ---
 
-## Contributing
+## Credits
 
-Contributions are welcome! Feel free to:
+This extension is largely based on [**scribd-downloader**](https://github.com/themrsami/scribd-downloader) by [Usama Nazir (@themrsami)](https://github.com/themrsami), a Python and Selenium tool that exports Scribd documents to PDF. The export method comes from that project: page cleanup, batched page loading, per-page printing through the DevTools Protocol, and one PDF sheet per page. Thanks also to its contributors, including [@HBaz92](https://github.com/HBaz92) for the per-page export fix.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## Support the Project
-
-If you find this tool useful, consider supporting its development:
-
-<p align="center">
-  <a href="https://buymeacoffee.com/mrsami">
-    <img src="assets/buymeacoffee.svg" alt="Buy Me A Coffee" width="40" height="40">
-  </a>
-</p>
+If you find this useful, consider starring and supporting the original project.
 
 ---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT, as in the original project.
 
 ---
 
 ## Disclaimer
 
 This tool is for educational purposes only. Please respect copyright laws and Scribd's Terms of Service. Only download documents you have the right to access.
-
----
-
-<p align="center">
-  Made with ❤️ by <a href="https://github.com/fullstackusama">Usama Nazir</a>
-</p>
-
-<p align="center">
-  If you find this useful, please consider giving it a ⭐
-</p>
