@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font: 13px system-ui, sans-serif; width: 400px; margin: 12px; }
+    h1 { font-size: 15px; margin: 0 0 10px; display: flex; align-items: center; gap: 6px; }
+    h1 img { width: 22px; height: 22px; object-fit: contain; }
+    input[type="text"] { width: 100%; box-sizing: border-box; padding: 6px; }
+    label { display: block; margin: 8px 0; }
+    button { padding: 8px; font-weight: 600; cursor: pointer; }
+    #download { width: 100%; }
+    #message { min-height: 1em; margin-top: 6px; }
+    #message.error { color: #b00020; }
+    #message.info { color: #555; }
+    #job { border-top: 1px solid #ddd; margin-top: 8px; padding-top: 10px; }
+    #filename { color: #555; word-break: break-all; margin-bottom: 6px; }
+    progress { width: 100%; height: 14px; }
+    #status-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+    #status { flex: 1; font-weight: 600; }
+    #status.error { color: #b00020; }
+    #status.done { color: #1b7f3b; }
+    #cancel { padding: 4px 10px; font-weight: normal; }
+    #queue { border-top: 1px solid #ddd; margin-top: 10px; padding-top: 8px; }
+    #queue h2 { font-size: 13px; margin: 0 0 6px; }
+    #queue ol { margin: 0; padding-left: 20px; }
+    #queue li { margin: 2px 0; }
+    #queue li span { word-break: break-all; }
+    #queue li button { padding: 0 6px; margin-left: 6px; font-weight: normal; }
+    #log { background: #f4f4f4; padding: 8px; height: 180px; overflow-y: auto; margin: 0;
+           font: 11px ui-monospace, monospace; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1><img src="icons/icon.svg" alt=""> Scribd Downloader</h1>
+  <input id="input" type="text" placeholder="Scribd URL or document ID" autofocus>
+  <label><input id="save-as" type="checkbox"> Ask where to save</label>
+  <button id="download">Download PDF</button>
+  <div id="message"></div>
+
+  <div id="job" hidden>
+    <div id="filename"></div>
+    <progress id="progress" value="0" max="1"></progress>
+    <div id="status-row">
+      <div id="status"></div>
+      <button id="cancel">Cancel</button>
+    </div>
+    <pre id="log"></pre>
+  </div>
+
+  <div id="queue" hidden>
+    <h2>Queued</h2>
+    <ol id="queue-list"></ol>
+  </div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
