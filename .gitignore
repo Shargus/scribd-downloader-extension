@@ -47,4 +47,5 @@ Thumbs.db
 .chrome-runtime-profile/
 .chrome-pdf-check/
 scribd-chrome-profile-*/
-
+package_extension.py
+.ruff_cache
